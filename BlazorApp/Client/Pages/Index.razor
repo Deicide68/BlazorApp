@@ -1,0 +1,57 @@
+﻿@page "/"
+@using BlazorShared.Models
+@inject IProductService productService
+@inject IJSRuntime JsRuntime
+
+<EditForm Model="product" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <div>
+        <label for="username">User Name</label>
+        <InputText id="username" @bind-Value="product.UserName" class="form-control"></InputText>
+        <ValidationMessage For="@(() => product.UserName)" />
+    </div>
+    <div>
+        <label for="model">Model</label>
+        <InputText id="model" @bind-Value="product.Model" class="form-control"></InputText>
+        <ValidationMessage For="@(() => product.Model)" />
+    </div>
+    <div>
+        <label for="productpartnumber">Product Part Number</label>
+        <InputText id="productpartnumber" @bind-Value="product.ProductPartNumber" class="form-control"></InputText>
+        <ValidationMessage For="@(() => product.ProductPartNumber)" />
+    </div>
+    <div>
+        <label for="quantity">Quantity</label><br />
+        <InputNumber id="quantity" @bind-Value="product.Quantity" class="form-control" />
+        <ValidationMessage For="@(() => product.Quantity)" />
+    </div>
+    <div>
+        <label for="price">Price</label><br />
+        <InputNumber id="price" @bind-Value="product.Price" class="form-control" />
+        <ValidationMessage For="@(() => product.Price)" />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
+
+@code {
+    Product product = new Product();
+
+    public async Task HandleSubmit()
+    {
+        await productService.AddProduct(product);
+        await Alert("Create Successfuly");
+
+        ResetForm();
+    }
+
+    private async Task Alert(string message){
+        await JsRuntime.InvokeVoidAsync("alert", message);
+    }   
+
+    private void ResetForm(){
+        product.ProductPartNumber = string.Empty;
+        product.Price = 0;
+        product.Quantity = 0;
+    }
+}

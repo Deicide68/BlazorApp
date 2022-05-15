@@ -1,0 +1,47 @@
+﻿@page "/"
+@using BlazorServerApp.Data
+@inject IProductService productService
+
+<PageTitle>Index</PageTitle>
+
+<h1>Product</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Model</th>
+            <th>Product Part Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Created Date</th>
+            <th>User Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in products)
+        {
+            <tr>
+                <td>@product.Model</td>
+                <td>@product.ProductPartNumber</td>
+                <td>@product.Quantity</td>
+                <td>@product.Price</td>
+                <td>@product.CreatedDate</td>
+                <td>@product.UserName</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    public List<Product> products = new List<Product>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProducts();
+    }
+
+    protected async Task LoadProducts()
+    {
+        products = await productService.GetProducts();
+    }
+}
